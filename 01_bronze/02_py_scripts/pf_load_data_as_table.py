@@ -24,6 +24,7 @@ for f in files:
         df = df.toDF(*new_column_names)
         
         # 4. Write to table
+        spark.sql("create schema if not exists 01_bronze_catalog.raw_schema")
         df.write.mode("overwrite").saveAsTable(f"`01_bronze_catalog`.raw_schema.{table_name}")
         
         print(f"Processed: {table_name}")
