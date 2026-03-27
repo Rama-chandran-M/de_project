@@ -1,0 +1,48 @@
+resources:
+  jobs:
+    de_project_pipeline:
+      name: de_project_pipeline
+      email_notifications:
+        on_start:
+          - ramachandranmuthusamy7@gmail.com
+        on_success:
+          - ramachandranmuthusamy7@gmail.com
+        on_failure:
+          - ramachandranmuthusamy7@gmail.com
+      schedule:
+        quartz_cron_expression: 42 0 4 * * ?
+        timezone_id: Asia/Calcutta
+        pause_status: UNPAUSED
+      tasks:
+        - task_key: load_data_into_raw_schema
+          run_job_task:
+            job_id: 104400198507012
+        - task_key: transform_data_01
+          depends_on:
+            - task_key: load_data_into_raw_schema
+          run_job_task:
+            job_id: 11719440948838
+        - task_key: transform_data_02
+          depends_on:
+            - task_key: load_data_into_raw_schema
+          run_job_task:
+            job_id: 874162434294665
+        - task_key: transform_data_03
+          depends_on:
+            - task_key: load_data_into_raw_schema
+          run_job_task:
+            job_id: 928898909780748
+        - task_key: implement_start_schema
+          depends_on:
+            - task_key: transform_data_01
+            - task_key: transform_data_02
+            - task_key: transform_data_03
+          run_job_task:
+            job_id: 1072659534008756
+        - task_key: execute_kpi
+          depends_on:
+            - task_key: implement_start_schema
+          run_job_task:
+            job_id: 811030177567312
+      queue:
+        enabled: true
